@@ -5,6 +5,20 @@ ruby "3.2.9"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.0"
 
+# Authentication
+gem 'devise'
+gem 'devise-jwt'
+
+# For FCM push
+gem 'fcm' # simple wrapper to send to FCM
+
+# For background jobs (optional)
+gem 'sidekiq' # optional, use redis if you want to use this
+
+# For serialization (optional)
+gem 'active_model_serializers' # or use fast_jsonapi/just render JSON manually
+
+
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 
