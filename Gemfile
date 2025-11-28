@@ -8,6 +8,7 @@ gem "rails", "~> 7.1.0"
 # Authentication
 gem 'devise'
 gem 'devise-jwt'
+gem 'jwt'
 
 # For FCM push
 gem 'fcm' # simple wrapper to send to FCM
@@ -18,6 +19,7 @@ gem 'sidekiq' # optional, use redis if you want to use this
 # For serialization (optional)
 gem 'active_model_serializers' # or use fast_jsonapi/just render JSON manually
 
+gem 'rack-cors'
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
