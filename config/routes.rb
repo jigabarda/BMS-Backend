@@ -1,21 +1,27 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
+  devise_for :users,
+             defaults: { format: :json },
+             path: '',
+             path_names: {
+               sign_in: 'auth/sign_in',
+               sign_out: 'auth/sign_out',
+               registration: 'auth'
+             },
+             controllers: {
+               sessions: 'api/v1/users/sessions',
+               registrations: 'api/v1/users/registrations'
+             }
+
   namespace :api do
     namespace :v1 do
-      devise_for :users,
-                 controllers: { sessions: 'api/v1/users/sessions', registrations: 'api/v1/users/registrations' },
-                 path: 'auth',
-                 defaults: { format: :json }
+      get "users/me", to: "users#me"
 
+      resources :devices, only: [:index, :create, :destroy]
       resources :broadcasts, only: [:index, :create, :show] do
-        member do
-          post :send_broadcast
-        end
+        post :send_broadcast, on: :member
       end
-
-      resources :devices, only: [:create, :index, :destroy]
     end
   end
-
-  # ActionCable mount (for dev)
-  mount ActionCable.server => '/cable'
 end
