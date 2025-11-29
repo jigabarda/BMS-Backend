@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
+  # Devise Auth Routes
   devise_for :users,
              defaults: { format: :json },
              path: '',
@@ -14,14 +15,17 @@ Rails.application.routes.draw do
                registrations: 'api/v1/users/registrations'
              }
 
+  # API Routes
   namespace :api do
     namespace :v1 do
       get "users/me", to: "users#me"
 
       resources :devices, only: [:index, :create, :destroy]
-      resources :broadcasts, only: [:index, :create, :show] do
+
+      resources :broadcasts do
         post :send_broadcast, on: :member
       end
+
     end
   end
 end
