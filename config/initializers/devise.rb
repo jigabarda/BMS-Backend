@@ -5,6 +5,7 @@ Devise.setup do |config|
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.dig(:devise, :jwt_secret_key)
     jwt.algorithm = 'HS256'
+    jwt.expiration_time = 1.hour.to_i
 
     jwt.dispatch_requests = [
       ['POST', %r{^/auth/sign_in$}]
@@ -17,8 +18,6 @@ Devise.setup do |config|
     jwt.request_formats = {
       user: [:json]
     }
-
-    jwt.expiration_time = 1.hour
   end
 
   config.navigational_formats = []

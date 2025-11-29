@@ -2,7 +2,6 @@
 module Api
   module V1
     class UsersController < BaseController
-      # GET /api/v1/users/me
       def me
         render json: {
           id: current_user.id,

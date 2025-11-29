@@ -5,31 +5,26 @@ module Api
       class SessionsController < Devise::SessionsController
         respond_to :json
 
-        # Login/logout must be public
-        skip_before_action :authenticate_user!, raise: false
-
-        # No HTML redirect behavior
-        protected def verify_signed_out_user; end
-
-        # POST /auth/sign_in
-        # Devise + devise-jwt will set request.env['warden-jwt_auth.token']
+        # LOGIN
         def create
-          super
-        end
+          self.resource = warden.authenticate!(auth_options)
+          sign_in(resource_name, resource)
 
-        private
-
-        def respond_with(resource, _opts = {})
           token = request.env['warden-jwt_auth.token']
+
           render json: {
             message: "Logged in successfully",
             token: token,
-            user: { id: resource.id, email: resource.email }
+            user: {
+              id: resource.id,
+              email: resource.email
+            }
           }, status: :ok
         end
 
+        # LOGOUT
         def respond_to_on_destroy
-          head :no_content
+          render json: { message: "Logged out successfully" }, status: :ok
         end
       end
     end
