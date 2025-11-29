@@ -1,8 +1,7 @@
 class ApplicationController < ActionController::API
+  include ActionController::Cookies
   include ActionController::MimeResponds
-  include Devise::Controllers::Helpers   # allows current_user, authenticate_user!, etc.
-  respond_to :json
 
-  # If you want to protect globally:
-  # before_action :authenticate_user!
+  # Disable CSRF because this is an API
+  protect_from_forgery with: :null_session if respond_to?(:protect_from_forgery)
 end
