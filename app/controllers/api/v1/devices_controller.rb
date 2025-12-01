@@ -2,6 +2,7 @@
 module Api
   module V1
     class DevicesController < BaseController
+
       # GET /api/v1/devices
       def index
         render json: current_user.devices, status: :ok
@@ -9,12 +10,15 @@ module Api
 
       # POST /api/v1/devices
       def create
-        # we store devices by token
-        device = current_user.devices.find_or_initialize_by(token: device_params[:token])
+        # Look for token globally (NOT scoped by current_user)
+        device = Device.find_or_initialize_by(token: device_params[:token])
+
+        # Always update the device’s user + platform
+        device.user = current_user
         device.platform = device_params[:platform] if device_params[:platform].present?
 
         if device.save
-          render json: device, status: :created
+          render json: device, status: :ok  # use :ok instead of :created to avoid confusion
         else
           render json: { errors: device.errors.full_messages }, status: :unprocessable_entity
         end
@@ -22,7 +26,9 @@ module Api
 
       # DELETE /api/v1/devices/:id
       def destroy
-        device = current_user.devices.find_by(id: params[:id]) || current_user.devices.find_by(token: params[:id])
+        device = current_user.devices.find_by(id: params[:id]) ||
+                 current_user.devices.find_by(token: params[:id])
+
         if device&.destroy
           head :no_content
         else

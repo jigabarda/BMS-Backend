@@ -23,6 +23,9 @@ class PushNotificationSender
         notification: {
           title: payload[:title],
           body: payload[:body]
+        },
+        data: {
+          broadcast_id: payload[:broadcast_id].to_s
         }
       }
     }
@@ -59,7 +62,7 @@ class PushNotificationSender
     {
       type: "service_account",
       project_id: Rails.application.credentials.fcm[:project_id],
-      private_key_id: "dummy", # not used
+      private_key_id: "dummy",
       private_key: Rails.application.credentials.fcm[:private_key],
       client_email: Rails.application.credentials.fcm[:client_email],
       client_id: "dummy",
